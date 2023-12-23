@@ -34,8 +34,9 @@ class TupleArg(Tuple):
     # have an _eval_as_leading_term method that handles all cases and this
     # method should be removed because leading terms of tuples don't make
     # sense.
-    def as_leading_term(self, *x, logx=None, cdir=0):
-        return TupleArg(*[f.as_leading_term(*x, logx=logx, cdir=cdir) for f in self.args])
+    # def as_leading_term(self, *x, logx=None, cdir=0):
+    #     print(self)
+    #     return TupleArg(*[f.as_leading_term(*x, logx=logx, cdir=cdir) for f in self.args])
 
     def limit(self, x, xlim, dir='+'):
         """ Compute limit x->xlim.
@@ -263,6 +264,17 @@ class hyper(TupleParametersBase):
 
         if x0 is S.Zero:
             return S.One
+        a1, a2 = self.ap
+        if (a1*a2).is_negative:
+            neg = -a1
+            if a2.is_negative:
+                neg = -a2
+            nap = Tuple(*[a + neg for a in self.ap])
+            nbq = Tuple(*[b + neg for b in self.bq])
+            rfap = [RisingFactorial(a, neg) for a in self.ap]
+            rfbq = [RisingFactorial(b, neg) for b in self.bq]
+            prod = Mul(*rfap) / Mul(*rfbq)
+            return prod*hyper(nap, nbq, self.argument)
         return super()._eval_as_leading_term(x, logx=logx, cdir=cdir)
 
     def _eval_nseries(self, x, n, logx, cdir=0):
