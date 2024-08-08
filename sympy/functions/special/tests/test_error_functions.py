@@ -710,6 +710,13 @@ def test_ci():
                                         expint(1, x*exp_polar(I*pi/2))/2
     raises(ArgumentIndexError, lambda: Ci(x).fdiff(2))
 
+def test_Shi_Chi_series():
+    assert Shi.series(x) == x + x**3/18 + x**5/600 + O(x**6)
+    assert Chi.series(x) == EulerGamma + log(x) + x**2/4 + x**4/96 + O(x**6)
+    assert Shi(x).aseries(x) == -I*pi/2 + (1/x + 2/x**3)*sinh(x) + (x**(-2) + 6/x**4)*cosh(x) + \
+        O(x**(-6), (x, oo))
+    assert Chi(x).aseries(x) == -I*pi/2 + (1/x + 2/x**3)*cosh(x) + (x**(-2) + 6/x**4)*sinh(x) + \
+        O(x**(-6), (x, oo))
 
 def test_fresnel():
     assert fresnels(0) is S.Zero

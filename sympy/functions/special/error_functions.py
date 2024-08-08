@@ -2206,6 +2206,17 @@ class Shi(TrigonometricIntegral):
         else:
             return self
 
+    def _eval_aseries (self, n, args0, x, logx):
+        from sympy.series.order import Order
+        point = args0[0]
+        if point in [S.Infinity, S.NegativeInfinity]:
+            z = self.args[0]
+            p = [factorial(2*k) / z**(2*k+1) for k in range(0, int((n-1)/2))]
+            q = [factorial(2*k-1) / z**(2*k) for k in range(1, int(n/2))]
+            res = sinh(z)*Add (*p) + cosh(z)*Add(*q) + (-S.ImaginaryUnit*S.Pi/2 + Order(1/z**n, x))
+            return res
+        return super()._eval_aseries (n, args0, x, logx)
+
 
 class Chi(TrigonometricIntegral):
     r"""
@@ -2318,6 +2329,17 @@ class Chi(TrigonometricIntegral):
             return self.func(arg0)
         else:
             return self
+
+    def _eval_aseries (self, n, args0, x, logx):
+        from sympy.series.order import Order
+        point = args0[0]
+        if point in [S.Infinity, S.NegativeInfinity]:
+            z = self.args[0]
+            p = [factorial(2*k) / z**(2*k+1) for k in range(0, int((n-1)/2))]
+            q = [factorial(2*k-1) / z**(2*k) for k in range(1, int(n/2))]
+            res = sinh(z)*Add (*q) + cosh(z)*Add(*p) + (-S.ImaginaryUnit*S.Pi/2 + Order(1/z**(n), x))
+            return res
+        return super()._eval_aseries (n, args0, x, logx)
 
 
 ###############################################################################
